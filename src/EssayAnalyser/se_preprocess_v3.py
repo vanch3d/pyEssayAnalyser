@@ -58,7 +58,7 @@ def get_lemmas(sent):
 ##    #print(c)
 ##    if c.startswith("u'\u"): #u'\u03c31'
 ##        #s = str(sent)
-##        #c = s.decode('unicode-escape')
+##        #c = s
 ##        #nf2.write(c)    
 ##        #nf2.write('\n')
 ##        print(sent)

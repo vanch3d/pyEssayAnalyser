@@ -39,7 +39,7 @@ def write_to_details_file(essay_fname, \
     # #    # xxxx do not delete. Do you want all the sentences or do you want the top N?
     # #    nf.write('\nSentences ranked in key-ness order (descending): \n')
     # #    s = str(rankorder) # ...and write them to the results file so you can see the order at a glance.
-    # #    c = s.decode('unicode-escape')
+    # #    c = s
     # #    nf.write(c)
     # #    nf.write('\n')
 
@@ -51,7 +51,7 @@ def write_to_details_file(essay_fname, \
     s = str(rankorder[:threshold])  # ...and write them to the results file so you can see the order at a glance.
     # w = re.sub('u\'', 'u\'\n\n', s) # Add a new line at the end of every result so that each result is written to a separate line
     # w = re.sub('u\'', 'u\'\n\n', s) # Add a new line at the end of every result so that each result is written to a separate line
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
@@ -62,13 +62,13 @@ def write_to_details_file(essay_fname, \
     for pair in temp:  # For each member of the list of (section_name, section_label) pairs
         nf.write('\nSentences from section: ')
         s = str(pair[0])
-        c = s.decode('unicode-escape')
+        c = s
         nf.write(c)
         nf.write('\n')
         for item in reorganised_array:  # For each member of the list/array (each sentence)
             if item[2] == pair[1]:  # if the label of the sentence is the same as the label in the pair
                 s = str(item)
-                c = s.decode('unicode-escape')
+                c = s
                 nf.write(c)  # and write it to file
                 nf.write('\n')
     # #######
@@ -83,7 +83,7 @@ def write_to_details_file(essay_fname, \
                w)  # Be careful, because Python sometimes uses double quotes instead of single ones
     # nf.write('\n\nTop 30 key sentences: \n')
     nf.write('\n\nAll sentences ranked in key-ness order (descending): \n')
-    c = y.decode('unicode-escape')
+    c = y
     nf.write(c)
     nf.write('\n')
 

@@ -403,13 +403,13 @@ def debora_write_results_ke(text_ke, text_se, gr_ke, di, edges_over_sents, myarr
 
     nf.write('\nList of key lemmas (in rank order):\n')
     s = str(keylemmas)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('\nList of distinct key words (the inflected forms of the key lemmas):\n')
     s = str(keywords)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
     ##    topbetscore = scoresNfreqs[0][1]
@@ -418,91 +418,91 @@ def debora_write_results_ke(text_ke, text_se, gr_ke, di, edges_over_sents, myarr
     ##    nf.write('\n')
     nf.write('\nList of the five most freq lemmas: \n')
     s = str(fivemostfreq)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('\nMean avg freq of five most freq lemmas: ')
     s = str(avfreqsum)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('\nList of distinct quadgrams:\n')  # (seqs of within-sentence key words)
     s = str(quadgram_keyphrases)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('\nList of distinct trigrams:\n')
     s = str(trigram_keyphrases)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('\nList of distinct bigrams:\n')
     s = str(bigram_keyphrases)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('\nNo. key lemmas occurring in ass_q_long: ')
     s = str(len(kls_in_ass_q_long))
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('\nList of essay key lemmas (+ freq) in ass_q_long:\n')
     s = str(kls_in_ass_q_long)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('\nSum of frequencies of key lemmas in ass_q_long: ')
     s = str(sum_freq_kls_in_ass_q_long)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('\nList of key lemmas (+ freq) occurring in ass_q_short:\n')
     s = str(kls_in_ass_q_short)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('\nSum of frequencies of key lemmas in ass_q_short: ')
     s = str(sum_freq_kls_in_ass_q_short)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write("\nNumber of the essay's key lemmas occurring in the text book index: ")
     s = str(len(kls_in_tb_index))
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write("\nList of the essay's key lemmas that occur in the text book index:\n")
     s = str(kls_in_tb_index)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write("\nSum of frequencies of the essay's key lemmas that occur in the text book index: ")
     s = str(sum_freq_kls_in_tb_index)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('Number of bigrams in the introduction section: ')
     s = str(bigrams_in_intro1)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
     nf.write('Number of bigrams in the conclusion section: ')
     s = str(bigrams_in_concl1)
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
 
@@ -515,7 +515,7 @@ def debora_write_results_ke(text_ke, text_se, gr_ke, di, edges_over_sents, myarr
     s = re.sub('\[', '', s)
     s = re.sub('\]', '', s)
     nf.write('\nAll lemmas: lemma, rank, betw score, freq\n')
-    c = s.decode('unicode-escape')
+    c = s
     nf.write(c)
     nf.write('\n')
     nf.write('\n*******************************************************\n\n')
@@ -681,13 +681,13 @@ def debora_write_results_ke(text_ke, text_se, gr_ke, di, edges_over_sents, myarr
 ##    #nf2.write('\n')
 ##
 ##    s = str(keylemmas)
-##    c = s.decode('unicode-escape')
+##    c = s
 ##    nf2.write(c)
 ##    nf2.write('\n')
 ##    #nf2.write('\nList of distinct bigrams:\n')
 ####    nf2.write('\n')
 ####    s = str(bigram_keyphrases)
-####    c = s.decode('unicode-escape')
+####    c = s
 ####    nf2.write(c)        
 ####    nf2.write('\n\n')
 
