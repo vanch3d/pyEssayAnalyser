@@ -1,6 +1,6 @@
 import re # For regular expressions
 #from nltk.corpus import stopwords # For removing uninteresting words from the text
-from se_stops import essay_stop_words
+from EssayAnalyser.se_stops import essay_stop_words
 """"
 This file contains all the functions concerning analysing the
 structure of the essay. The functions are mostly called by the
@@ -134,7 +134,7 @@ def find_last_section_para_index(section_name, heading_index_first, text):
                             and text[counter_p][counter_s][0] != '#-s:l#' # a letter heading
                             and text[counter_p][counter_s][0] != '#-s:d#' # a digital heading
                             and text[counter_p][counter_s][0] != '#-s:s#')): # a section heading
-                                #print '\n\nLAST PARA OF CONCL 11', text[counter_p]
+                                #print('\n\nLAST PARA OF CONCL 11', text[counter_p])
                                 section_index_last = counter_p 
                                 return section_index_last                                
                         else:                        
@@ -144,7 +144,7 @@ def find_last_section_para_index(section_name, heading_index_first, text):
                 counter_p -= 1
             else:
                 x = len(text)-1
-                #print '\n\n LAST PARA OF CONCL 22', text[x]                
+                #print('\n\n LAST PARA OF CONCL 22', text[x]                )
                 return len(text)-1 # If you don't find one, make the last para of the text the last para of the conclusion.                        
     else:
         result = heading_index_first
@@ -250,8 +250,8 @@ def find_no_intro_heading_indices(text, headings,countTextChars):
                             countIntroChars += len(temp)
                     if countIntroChars > countTextChars/3:
                         last = first                    
-                        print '###### INTRO SET TO A SINGLE PARA#####'
-                        #print 'first, last', first, last, text[first]
+                        print('###### INTRO SET TO A SINGLE PARA#####')
+                        #print('first, last', first, last, text[first])
                     break
             else: # If this isn't a likely section para, move on to the next para                    
                 counter1 += 1
@@ -344,9 +344,9 @@ def find_no_concl_heading_indices(section_name, headings, text,countTextChars,nf
                 and (len(text[counter1]) > 1 or len(sent) > 14) # ...and the paragraph contains more than one sentence, or it's a long sentence
                 and (counter1 < word_count_index)):  
                     last = counter1 # then set this paragraph to the last para of the concl
-                    #print '^^^^^^^^^^^^^^^^^^^^^^^^^^THIS IS LAST PARA OF CONCL: ', last, text[last]
+                    #print('^^^^^^^^^^^^^^^^^^^^^^^^^^THIS IS LAST PARA OF CONCL: ', last, text[last])
                     first = find_first_concl_para_index(text,last,headings,countTextChars,nf,nf2,dev) # and find the first para
-                    #print '^^^^^^^^^^^^^^^^^^^^^^^^^^THIS IS FIRST PARA OF CONCL: ', first, text[first]
+                    #print('^^^^^^^^^^^^^^^^^^^^^^^^^^THIS IS FIRST PARA OF CONCL: ', first, text[first])
                     countConclChars = 0
                     y = last+1
                     for para in text[first:y]:
@@ -355,14 +355,14 @@ def find_no_concl_heading_indices(section_name, headings, text,countTextChars,nf
                             countConclChars += len(temp)
                     if countConclChars > countTextChars/3: # If the concl you have found is longer than a third of the body of the essay
                         first = last                    
-                        #print '###### CONCL SET TO A SINGLE PARA#####'
-                        #print 'first, last', first, last, text[first]                    
+                        #print('###### CONCL SET TO A SINGLE PARA#####')
+                        #print('first, last', first, last, text[first]                    )
                     break
             else: # If this isn't a likely section para, move on to the next para                    
                 counter1 -= 1
         else:
             break # Stop looping when you've dealt with the first paragraph. If you've got this far without finding the section, return [] as position of intro.
-    #print '\n^^^^^^^^^^^^^^^^^^^^^^^^^^THIS IS FIRST PARA OF CONCL: ', first,text[first]
+    #print('\n^^^^^^^^^^^^^^^^^^^^^^^^^^THIS IS FIRST PARA OF CONCL: ', first,text[first])
     return (first,last)        
 
 # Function: find_title_indices(index, text)
@@ -395,10 +395,10 @@ def find_title_indices(section_name,index, text): # 'index' is the first paragra
 ##                and counter1 < index # If this paragraph is earlier than the introduction
 ##                and re.search(p, temp2)): # and the first sentence of the previous para contains 'title'
 ##                    first = counter1 # then this para is the title
-##                    #print '\n\n\nThis find_title_indices 1 with title:', text[counter1]
+##                    #print('\n\n\nThis find_title_indices 1 with title:', text[counter1])
 ##                    break                
             if re.search(title, temp) and countParaChars < 150 and countParaChars > 20: # and this para contains 'title'
-                print '\nThis is find_title_indices 1 with section_name:', section_name, text[counter1]
+                print('\nThis is find_title_indices 1 with section_name:', section_name, text[counter1])
                 first = counter1 # then this para is the title
                 return(first,first)
             elif (text[counter1][0][0] in mylabels2):  # If this para has already been labelled a heading, look at the previous paragraph.                
@@ -411,28 +411,28 @@ def find_title_indices(section_name,index, text): # 'index' is the first paragra
                             countParaChars += len(temp)                        
                         temp2 = ' '.join(text[counter2][0])
                         if re.search(title, temp2) and countParaChars < 150 and countParaChars > 20: # and this para contains 'title'
-                            print '\nThis is find_title_indices 2 with section_name:', section_name,text[counter2]
+                            print('\nThis is find_title_indices 2 with section_name:', section_name,text[counter2])
                             first = counter2 # then this para is the title
                             return(first,first)                        
                         elif (text[counter2][0][0] in mylabels1 and countParaChars < 150 and countParaChars > 20):
                             first = counter2
-                            print '\nThis is find_title_indices 3 with section_name:', section_name,text[counter2]
+                            print('\nThis is find_title_indices 3 with section_name:', section_name,text[counter2])
                             return(first,first) # xxxx I had a lot of problems trying to find a bug which turned out to be because I had 'break' here instead of 'return'                            
                         else:
                             counter2 -= 1
                     else:
                         first = counter1
-                        print '\nThis is find_title_indices 4 with section_name:', section_name,text[counter1]
+                        print('\nThis is find_title_indices 4 with section_name:', section_name,text[counter1])
                         return(first,first)
             elif(text[counter1][0][0] == '#dummy#' and countParaChars > 20):
                 first = counter1
-                print '\nThis is find_title_indices 5 with section_name:', section_name,text[counter1]
+                print('\nThis is find_title_indices 5 with section_name:', section_name,text[counter1])
                 return(first,first)                
             else: # If this isn't a likely section para, move on to the next para                    
                 counter1 -= 1
         else:
             break # Stop looping when you've dealt with the last paragraph. If you've got this far without finding the section, return [] as position of intro.
-    print '\nThis find_title_indices NO TITLE FOUND\n', 
+    print('\nThis find_title_indices NO TITLE FOUND\n', )
     return (first,first)
 
 
@@ -457,7 +457,7 @@ def find_title_from_toc(text):
             mylist.append(item)
     heading_count = len(mylist)
     if mylist != []:
-        print '\nTable of contents headings:', mylist    
+        print('\nTable of contents headings:', mylist    )
     title_first5 = []
     title_last5 = []
     if heading_count > 0: # If there IS a contents heading
@@ -474,7 +474,7 @@ def find_title_from_toc(text):
 def find_section_paras(text, section_name, headings, countTextChars, nf,nf2,dev):
     list_this_heading = count_this_heading(section_name, headings, text)
     if list_this_heading != [] and dev == 'DGF':
-        print 'All headings like this:', list_this_heading
+        print('All headings like this:', list_this_heading)
     if section_name == 'Preface' or section_name == 'Abstract': # Once you have counted the heading occurrences, treat prefaces and abstracts exactly the same as summaries
         section_name = 'Summary'
     heading_count = len(list_this_heading) # heading_count is the number of 'section_name' headings found. Typically 2, 1, or 0. If 2, the first is probably in a contents section.
@@ -484,19 +484,19 @@ def find_section_paras(text, section_name, headings, countTextChars, nf,nf2,dev)
     headingQ = []
     if heading_count == 0 and section_name == 'Summary':
         if dev == 'DGF':
-            print 'No "Summary" heading has been found'
+            print('No "Summary" heading has been found')
         headingQ = False
         True # Don't do anything, para indices remain empty. Not assuming that there is unlabelled Summary section, as we do with Introduction and Conclusion.        
     elif heading_count == 0 and section_name == 'Introduction': # If no 'Introduction' section heading has been found
         (first,last) = find_no_intro_heading_indices(text, headings,countTextChars)
         title_indices = find_title_indices(section_name, first, text)
         if dev == 'DGF':
-            print 'No "Introduction" heading has been found'
+            print('No "Introduction" heading has been found')
         headingQ = False
     elif heading_count == 0 and section_name == 'Conclusion': # If no 'Conclusion' section heading has been found
         (first,last) = find_no_concl_heading_indices(section_name, headings, text,countTextChars,nf,nf2,dev)
         if dev == 'DGF':
-            print 'No "Conclusion" heading has been found'
+            print('No "Conclusion" heading has been found')
         headingQ = False
     elif section_name == 'Introduction': # In all other Introduction cases
         first_heading = list_this_heading[0][1] # So take it as heading for body intro section
@@ -504,19 +504,19 @@ def find_section_paras(text, section_name, headings, countTextChars, nf,nf2,dev)
         title_indices = find_title_indices(section_name,first, text)
         if dev == 'DGF':
             headingQ = True
-        print '3 A heading has been found for section name:', section_name, first, last, list_this_heading[0][0]             
+        print('3 A heading has been found for section name:', section_name, first, last, list_this_heading[0][0]             )
     elif section_name == 'Conclusion': # In all other 'conclusion' cases
         first_heading = list_this_heading[0][1] # So take it as heading for body concl section
         (first,last) = find_first_section_para_index(section_name, first_heading, text)
         if dev == 'DGF':
-            print '4 A heading has been found for section name:', section_name, first, last, list_this_heading[0][0]    
+            print('4 A heading has been found for section name:', section_name, first, last, list_this_heading[0][0]    )
         headingQ = True
     else: # In all other cases
         first_heading = list_this_heading[0][1] # So take it as heading for body intro section
         (first,last) = find_first_section_para_index(section_name, first_heading, text)
         title_indices = find_title_indices(section_name,first, text)
         if dev == 'DGF':
-            print '5 A heading has been found for section name:', section_name, first, last, list_this_heading[0][0]
+            print('5 A heading has been found for section name:', section_name, first, last, list_this_heading[0][0])
         headingQ = True
     para_indices = (first, last)
     return (para_indices, title_indices, headingQ), list_this_heading
@@ -676,8 +676,8 @@ def table_entries_recheck1(text):
                   and text[prevpara][0][0] == '#-s:e#'): # and the previous para is table entries
                 temp = ['#-s:e#'] + sent[1:] # label the sentence 'table entries': '#-s:e#'
                 para2 = [temp] # Make the sentence into a single-sentence paragraph
-                #print '\n64.', para2
-                #print '\n'                
+                #print('\n64.', para2)
+                #print('\n'                )
                 mylist3.append(para2)
                 counter_p += 1
             #####################
@@ -697,8 +697,8 @@ def table_entries_recheck1(text):
                     else:
                         break
                 para2 = sentlist
-                #print '65.', para2
-                #print '\n'
+                #print('65.', para2)
+                #print('\n')
                 mylist3.append(para2)
                 counter_p += 1
             #####################
@@ -719,8 +719,8 @@ def table_entries_recheck1(text):
                     else:
                         break
                 para2 = sentlist
-                #print '\n66.', para2
-                #print '\n'                
+                #print('\n66.', para2)
+                #print('\n'                )
                 mylist3.append(para2)
                 counter_p += 1
             else:
@@ -759,8 +759,8 @@ def table_entries_recheck2(text):
                   and text[prevpara][0][0] == '#-s:e#'): # and the previous para is a table entry
                 temp = ['#-s:e#'] + sent[1:] # label the sentence 'table entries': '#-s:e#'
                 para2 = [temp] # Make the sentence into a single-sentence paragraph
-                #print '\n67.', para2
-                #print para2
+                #print('\n67.', para2)
+                #print(para2)
                 mylist3.append(para2)
                 counter_p += 1
             #####################
@@ -789,8 +789,8 @@ def table_entries_recheck2(text):
                     else:
                         break
                 para2 = sentlist                
-                #print '68.', para2
-                #print '\n'
+                #print('68.', para2)
+                #print('\n')
                 mylist3.append(para2)
                 counter_p += 1
             else:
@@ -837,17 +837,17 @@ def find_and_label_headings(text,ass_q_long_words,nf2,dev):
                         if re.match(r'\d+', lastword):
                             temp = ['#-s:c#'] + sent[1:] # label this sentence as a caption (contents probably)
                             sentlist.append(temp)
-                            #print '\n1.', sentlist
+                            #print('\n1.', sentlist)
                             counter_s += 1
 ##                        elif proc_sent in ass_q_long_words and len(proc_sent)>1: # this is not a solution because not all sentences in the para are necessarily directly quoted from the ass q
 ##                            sentlist.append(temp)
 ##                            temp = ['#-s:q#'] + sent[1:]
-##                            print '\n2.5.', temp
+##                            print('\n2.5.', temp)
 ##                            counter_s += 1                                    
                         else:    
                             temp = ['#-s:d#'] + sent[1:] # label this sentence as a digital heading
                             sentlist.append(temp)
-                            #print '\n2.', sentlist
+                            #print('\n2.', sentlist)
                             counter_s += 1
                     else:
                         break
@@ -920,7 +920,7 @@ def find_and_label_headings(text,ass_q_long_words,nf2,dev):
                   and len(text[nextnextpara][0]) <=9): # and the length of that sentence is short
                 temp = ['#-s:e#'] + sent[1:] # label the sentence 'table entry': '#-s:e#'
                 para2 = [temp] # Make the sentence into a single-sentence paragraph
-                #print '\n61.', para2
+                #print('\n61.', para2)
                 mylist3.append(para2)
                 counter_p += 1
             #####################
@@ -943,7 +943,7 @@ def find_and_label_headings(text,ass_q_long_words,nf2,dev):
                     else:
                         para2 = sentlist
                         break   
-                #print '62.', para2
+                #print('62.', para2)
                 mylist3.append(para2)
                 counter_p += 1                            
             #####################
@@ -966,13 +966,13 @@ def find_and_label_headings(text,ass_q_long_words,nf2,dev):
                     else:
                         para2 = sentlist
                         break                
-                #print '\n63.', para2
+                #print('\n63.', para2)
                 mylist3.append(para2)
                 counter_p += 1
             else:
                 para2 = para
-                #print '333.', para2
-                #print '\n'                
+                #print('333.', para2)
+                #print('\n'                )
                 mylist3.append(para2)
                 counter_p += 1
         else:
@@ -1019,7 +1019,7 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
     y = x-1
     penultimateword = sent[y]
     untokend = ' '.join(sent[1:])
-    #print untokend
+    #print(untokend)
     dateQ = identify_date(untokend)
     toc = re.compile('contents', re.IGNORECASE) # Find out if there is a Table of Contents (for later)
     wordcount = re.compile('word count', re.IGNORECASE)
@@ -1055,25 +1055,25 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
     # Note this does not need to be the first sentence, it can be any
     if proc_sent in ass_q_long_words and len(proc_sent)>1: # len condition: Y7508648-H810-12I_02-1-M        
         temp = ['#-s:q#'] + sent[1:]
-        #print '\n3.', temp
+        #print('\n3.', temp)
         return temp        
     #######################
     # NOW THAT ASS Q IS CHECKED, JUST PASS ON SENT IF IT HAS ALREADY BEEN LABELLED
     #######################
     elif sent[0] == '#-s:p#': # If the sentence contains only stray punctuation marks 
         temp = sent # just pass it on unchanged.
-        #print '###################', temp
-        #print '\n4.', temp
+        #print('###################', temp)
+        #print('\n4.', temp)
         return temp           
     elif sent[0] == '#-s:n#': # If the sentence has already been labelled a numeric
         temp = sent # just pass it on unchanged.
-        #print '###################', temp
-        #print '\n5.', temp
+        #print('###################', temp)
+        #print('\n5.', temp)
         return temp        
     elif sent[0] == '#-s:d#': # If the sentence has already been labelled a digital heading
         temp = sent # just pass it on unchanged.
-        #print '###################', temp
-        #print '\n6.', temp
+        #print('###################', temp)
+        #print('\n6.', temp)
         return temp
     #############################
     # WORD COUNT (MAY BE MULTI-SENTENCE PARA OR NOT)
@@ -1082,7 +1082,7 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
     elif (re.match(words1, lastsentword)
           and re.match('[0-9][0-9][0-9][0-9]',penultimateword)): #2012 TMA01_H810_ Y7508648, U2303246-H810-11I_02-1-U
         temp = ['#-s:c#'] + sent[1:] # label the sentence 'not a sentence' (replace dummy label) currently meaning probably a heading
-        #print '\n7.', temp
+        #print('\n7.', temp)
         return temp                            
     ########################
     # SPECIAL HEADINGS: PARAGRAPH-INITIAL SENTENCES WITH SPECIAL WORDS IN THEM (MAY BE MULTI-SENTENCE PARA)
@@ -1093,36 +1093,36 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
           and not re.match('\d+$',lastword) # Stop contents being matched
           and counter_s == 0):
         temp = ['#-s:h#'] + sent[1:]
-        #print '\n8.', temp
+        #print('\n8.', temp)
         return temp
     elif (firstword.startswith('Appendix')
           and re.match('\d+$',lastword) # Match contents
           and counter_s == 0):
         temp = ['#-s:c#'] + sent[1:]
-        #print '\n9.', temp
+        #print('\n9.', temp)
         return temp
     # Note I am introducing a new label 'caption' here, partly because I want to exclude certain items from being able to be classed as table entries.
     elif ((firstword.startswith('Figure') or re.match(r'Fig',firstword))
            #and not re.match('\d+$',lastword) # Stop contents being matched
            and counter_s == 0): # Figure captions are not headings and they never mark the beginnings of sections.
         temp = ['#-s:c#'] + sent[1:] # xxxx introducing a new label 'caption' here.
-        #print '\n10.', temp
+        #print('\n10.', temp)
         return temp        
     elif firstword.startswith('Table') and counter_s == 0: # Table captions are not headings and they never mark the beginnings of sections.
         temp = ['#-s:c#'] + sent[1:] 
-        #print '\n11.', temp
+        #print('\n11.', temp)
         return temp        
     elif re.search(title, untokend) and counter_s == 0: # Table captions are not headings and they never mark the beginnings of sections.
         temp = ['#-s:c#'] + sent[1:] 
-        #print '\n12.', temp
+        #print('\n12.', temp)
         return temp        
     elif len(para) == 1 and re.match(page2, lastsentword): # 
         temp = ['#-s:c#'] + sent[1:] 
-        #print '\n13.', temp
+        #print('\n13.', temp)
         return temp        
     elif re.search(r'\d\d\d\d\d\d', untokend) and len(sent1) < 10: # and counter_s == 0: # Don't restrict to first sentence. Y4125847-H810-11I_01-1-U_utf8
         temp = ['#-s:c#'] + sent[1:] # Also for cases that are not paragraph  initial.
-        #print '\n14.', temp
+        #print('\n14.', temp)
         return temp
     elif ((re.search(r'H\s*810', untokend)
            or re.search(wordcount,untokend)
@@ -1132,33 +1132,33 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
           and len(sent1) < 8): # Course ID, word count declaration, not headings and they never mark the beginnings of sections.
           #and len(para) == 1): 
         temp = ['#-s:c#'] + sent[1:] 
-        #print '\n15.', temp
+        #print('\n15.', temp)
         return temp
     elif re.search(course2, untokend) and re.search(course3, untokend) and len(para) == 1: # Course ID is not a heading and they never mark the beginnings of sections.
         temp = ['#-s:c#'] + sent[1:] 
-        #print '\n16.', temp
+        #print('\n16.', temp)
         return temp
     elif re.search(course2, untokend) and len(para) == 1 and len(untokend) < 30: # Course ID is not a heading and they never mark the beginnings of sections.
         temp = ['#-s:c#'] + sent[1:] 
-        #print '\n16.5.', temp
+        #print('\n16.5.', temp)
         return temp
     elif re.match(r'Authors', firstword) and len(para) == 1: #  xxxx Added for RANLP        
         temp = ['#-s:c#'] + sent[1:] 
-        print '\n16.5.', temp
+        print('\n16.5.', temp)
         return temp
     elif re.search(report, untokend) and len(para) == 1 and len(untokend) < 10: # 'report' alone on a line
         temp = ['#-s:c#'] + sent[1:] 
-        #print '\n16.6.', temp
+        #print('\n16.6.', temp)
         return temp
     elif (re.search(words, untokend) or re.search(wordcount, untokend)) and len(para) == 1: # Course ID is not a heading and they never mark the beginnings of sections.
         temp = ['#-s:c#'] + sent[1:]  # Don't limit the words in the sentence
-        #print '\n17.', temp
+        #print('\n17.', temp)
         return temp
     elif (len(untokend) > 10 and len(untokend) < 35 # To qualify as a caption, it is assumed that the name of the student follows, and it doesn't just say 'student' or 'student A'. See B4375120-H810-10I_01-1-U_utf8. But also don't match true sentences starting with 'Student' M2774457-H810-10I_01-1-U_utf8_results.
           and (re.match(r'Student', firstword)
           or re.match(r'STUDENT', firstword))):
         temp = ['#-s:c#'] + sent[1:] # xxxx introducing a new label 'caption' here.
-        #print '\n17.5.', temp
+        #print('\n17.5.', temp)
         return temp
     elif (len(sent1) < 7 and counter_s == 0
           and (re.match(r'Name', firstword)
@@ -1174,27 +1174,27 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
           or re.match(r'TUTOR',firstword))):
           #or re.search(r'\d\d\d\d\d\d', untokend))): # student ID numbers are not true headings and they never mark the beginnings of sections.
         temp = ['#-s:c#'] + sent[1:] # xxxx introducing a new label 'caption' here.
-        #print '\n18.', temp
+        #print('\n18.', temp)
         return temp
     elif re.search(toc, untokend) and counter_s == 0 and len(sent) < 5:
         temp = ['#-s:c#'] + sent[1:]
-        #print '\n19.', temp, sent
+        #print('\n19.', temp, sent)
         return temp            
     elif re.search(page, untokend) and re.match(r'\d', lastword) and len(sent) < 7:
         temp = ['#-s:c#'] + sent[1:]
-        #print '\n20.', temp, sent
+        #print('\n20.', temp, sent)
         return temp            
     elif re.search(page, untokend) and len(sent) < 4: # some essays have just 'page' on a line in the table of contents
         temp = ['#-s:c#'] + sent[1:]
-        #print '\n21.', temp, sent
+        #print('\n21.', temp, sent)
         return temp            
     elif re.search(wordcount, untokend) and counter_s == 0:
         temp = ['#-s:c#'] + sent[1:] 
-        #print '\n22.', temp
+        #print('\n22.', temp)
         return temp
     elif firstword.startswith('AFTERWORD') and counter_s == 0:
         temp = ['#-s:h#'] + sent[1:]
-        #print '\n23.', temp
+        #print('\n23.', temp)
         return temp        
     # xxxx Now that I've added the new category 'short heading', I don't want introduction and conclusion headings to be counted
     # in that category (because short headings can become table entries), so I need to find them here first.
@@ -1205,7 +1205,7 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
           and countPassageChars < countTextChars/3): # countPassageChars gives how many chars are between beginning of whole text and this line. That chunk should not be more than a third of the whole essay.
           #and counter_p < len(text)/4): # The introduction heading must be in the first third of the text
         temp = ['#-s:s#'] + sent[1:]
-        #print '\n24.', temp
+        #print('\n24.', temp)
         return temp
     elif (re.search(conclusion, untokend)
           and counter_s == 0
@@ -1214,7 +1214,7 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
           and countPassageChars > (countTextChars/2)): # The conclusion heading must not be more than half way down the length of the whole essay
           # The conclusion heading must be in the last half of the text
         temp = ['#-s:s#'] + sent[1:] 
-        #print '\n25.', temp
+        #print('\n25.', temp)
         return temp            
     elif (re.search(summary, untokend) 
           and counter_s == 0
@@ -1222,35 +1222,35 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
           and not re.match('\d+$',lastword) # Stop contents being matched
           and counter_p < len(text)/3): # The summary heading must be in the first third of the whole essay. I am not accounting for summaries that appear at the end of the essay. This is because of the way I am currently finding titles.
         temp = ['#-s:s#'] + sent[1:] 
-        #print '\n26.', temp
+        #print('\n26.', temp)
         return temp            
     elif (re.search(abstract, untokend)
           and counter_s == 0
           and not re.match('\d+$',lastword) # Stop contents being matched          
           and len(sent1) < 7): 
         temp = ['#-s:s#'] + sent[1:] 
-        #print '\n27.', temp
+        #print('\n27.', temp)
         return temp
     elif (re.search(acknowledgements, untokend)
           and counter_s == 0
           and not re.match('\d+$',lastword) # Stop contents being matched          
           and len(sent) < 3):
         temp = ['#-s:s#'] + sent[1:]
-        #print '\n28.', temp, sent
+        #print('\n28.', temp, sent)
         return temp            
     elif (re.search(acknowledgments, untokend)
           and counter_s == 0
           and not re.match('\d+$',lastword) # Stop contents being matched          
           and len(sent) < 3):
         temp = ['#-s:s#'] + sent[1:]
-        #print '\n29.', temp, sent
+        #print('\n29.', temp, sent)
         return temp                
     elif (re.search(preface, untokend)
           and not re.match('\d+$',lastword) # Stop contents being matched          
           and counter_s == 0
           and len(sent1) < 7): 
         temp = ['#-s:s#'] + sent[1:] 
-        #print '\n30.', temp        
+        #print('\n30.', temp        )
         return temp    
     elif ((re.match(r'Part', firstword) or re.match(r'PART', firstword))
           and len(sent) > 2
@@ -1259,7 +1259,7 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
           and not re.match('\d+$',lastword) # Stop contents being matched
           and len(sent1) < 15): 
         temp = ['#-s:s#'] + sent[1:] 
-        #print '\n31.', temp        
+        #print('\n31.', temp        )
         return temp
     elif ((re.match(r'Section', firstword) or re.match(r'SECTION', firstword))
           and len(sent) > 2
@@ -1268,7 +1268,7 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
           and not re.match('\d+$',lastword) # Stop contents being matched
           and len(sent1) < 15): 
         temp = ['#-s:s#'] + sent[1:] 
-        #print '\n32.', temp        
+        #print('\n32.', temp        )
         return temp       
     ########################
     # SHORT PARAGRAPH-INITIAL SENTENCES STARTING A MULTI-SENTENCE PARAGRAPH
@@ -1281,7 +1281,7 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
               or firstword == u'\xb7' # or a middle dot
               or firstword in letters)): # or another kind of list itemiser
             temp = ['#-s:b#'] + sent[1:] # it's probably a short bullet point, even if it's not the whole paragraph. M3806725-H810-11I_02-1-U
-            #print '\n33.', temp
+            #print('\n33.', temp)
             return temp
     elif ((counter_s == 0) # If it's the first sentence of the paragraph
           and len(para) > 1 # and the para has more than one sentence
@@ -1291,17 +1291,17 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
               and firstword not in letters
               and firstword not in enums): # and the first word is not an itemiser or an enumerator
             temp = ['#-s:c#'] + sent[1:] # it's probably a caption (contents), even if it's not a whole paragraph. 
-            #print '\n34.', temp
+            #print('\n34.', temp)
             return temp
         elif (not re.match(':', lastword)
               and firstword not in letters
               and firstword not in enums): # and the first word is not an itemiser or an enumerator
             temp = ['#-s:h#'] + sent[1:] # it's probably a heading, even if it's not a whole paragraph. B5888256 2012 H810 TMA01.
-            #print '\n35.', temp
+            #print('\n35.', temp)
             return temp
         else:
             temp = ['#dummy#'] + sent[1:]
-            #print '\n36.', temp
+            #print('\n36.', temp)
             return temp
     ########################
     # LINES THAT START AND END WITH A NUMBER AND THAT HAVE MULTIPLE SENTENCES, USUALLY CONTENTS WITH DOTS IN THEM
@@ -1310,23 +1310,23 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
           and re.match('\d+$',lastword) and len(sent) > 2 # Last token is also a number 
           and not re.match('\d\d\d\d',lastword)): # UNDER 1000 (to stop year dates succeeding, no essay will have 1000 pages). R909989X-H810-10I_01-1-U_utf8.txt section 3.2 should fail here.                
         temp = ['#-s:c#'] + sent[1:] # label the sentence 'caption', i.e., not a true heading, not a table entry
-        #print '\n37.', temp
+        #print('\n37.', temp)
         return temp
             
 ##                        elif len(para2)==1 and len(sent)<=7 and re.search(evaluat,untokend): # xxxx these four paras just for printing out headings for H810 TMA02, not necessary otherwise
-##                            #print '\nEvaluation: ', sent, counter_p
+##                            #print('\nEvaluation: ', sent, counter_p)
 ##                            temp = ['#-s:h#'] + sent[1:]
 ##                            mylist1.append(temp)
 ##                        elif len(para2)==1 and len(sent)<=7 and re.search(reflect,untokend):
-##                            #print '\nReflection: ', sent, counter_p, 
+##                            #print('\nReflection: ', sent, counter_p, )
 ##                            temp = ['#-s:h#'] + sent[1:]
 ##                            mylist1.append(temp)
 ##                        elif len(para2)==1 and len(sent)<=7 and re.search(compar,untokend):
-##                            #print '\nComparison: ', sent, counter_p
+##                            #print('\nComparison: ', sent, counter_p)
 ##                            temp = ['#-s:h#'] + sent[1:]
 ##                            mylist1.append(temp)
 ##                        elif len(para2)==1 and len(sent)<=7 and re.search(resource,untokend):
-##                            #print '\nResource: ', sent, counter_p,  
+##                            #print('\nResource: ', sent, counter_p,  )
 ##                            temp = ['#-s:h#'] + sent[1:]
 ##                            mylist1.append(temp)       
     #######################
@@ -1347,15 +1347,15 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
             if (re.match('\d+$',lastword) # if the last token is a number and
                   and re.match('\d+$',sent[2])):  # if the third token is a number  # xxxx This added for Seale textbook                    
                 temp = ['#-s:b#'] + sent[1:] # label the sentence 'bullet point'
-                #print '\n38.', temp                
+                #print('\n38.', temp                )
                 return temp
             elif len(sent) <= 9: # if this sent is also short, it's probably a bullet point. xxxx experimenting with this threshold. it was 9 
                 temp = ['#-s:b#'] + sent[1:]
-                #print '\n39.', temp
+                #print('\n39.', temp)
                 return temp
             else:
                 temp = ['#dummy#'] + sent[1:]
-                #print '\n40.', temp
+                #print('\n40.', temp)
                 return temp
         ###################
         # FIRST TOKEN OF THIS PARA IS A LETTER
@@ -1369,11 +1369,11 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
               and not re.match(':', lastword)): # If the sentence has more than two tokens in it and (more than just the label and the letter)           
             if len(sent) <= 9: # if this sent is also short, it's probably a heading. xxxx experimenting with this threshold. it was 9 first, then 30. But if i make it long, then some long sentences are wrongly labelled as bullet points and this means they are not recognised as prose in sections. See conclusion of B4375120-H810-10I_01-1-U_utf8, for example.
                 temp = ['#-s:l#'] + sent[1:] 
-                #print '\n41.', temp
+                #print('\n41.', temp)
                 return temp
             else:
                 temp = ['#dummy#'] + sent[1:]
-                #print '\n42.', temp
+                #print('\n42.', temp)
                 return temp
         #######################
         # FIRST TOKEN OF THIS PARA STARTS WITH A NUMBER
@@ -1384,24 +1384,24 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
             if (re.match('\d+$',lastword) and len(sent) > 2 # Last token is also a number 
                   and not re.match('\d\d\d\d',lastword)): # UNDER 1000 (to stop year dates succeeding, no essay will have 1000 pages). R909989X-H810-10I_01-1-U_utf8.txt section 3.2 should fail here.                
                 temp = ['#-s:c#'] + sent[1:] # label the sentence 'caption', i.e., not a true heading, not a table entry
-                #print '\n43.', temp
+                #print('\n43.', temp)
                 return temp
             elif (len(sent1) <= 16 # and it contains fewer than n lexical words
                   and len(sent1) > 0 # and there is more than 0 lexical word
                   and not re.match(':', lastword)): # and it doesn't end in a colon
                 temp = ['#-s:d#'] + sent[1:] # label the sentence as 'digital heading' 
-                #print '\n44.', temp
+                #print('\n44.', temp)
                 return temp                            
             else:  # If it doesn't match the above clauses but does start with a number, it's not a heading
                 temp = ['#dummy#'] + sent[1:]
-                #print '\n45.', temp
+                #print('\n45.', temp)
                 return temp
         #############################
         # LAST TOKEN IS A NUMBER, AND SHORTISH, PROBABLY CONTENTS PAGE ENTRY, NOT A TRUE HEADING, NOT A TABLE ENTRY
         #############################
         elif re.match('\d+$',lastword) and not re.match('\d\d\d\d',lastword) and len(sent) < 17 and len(sent) > 1: # If last word IS a number, and the sentence is shortish, it's probably in the contents page 
             temp = ['#-s:c#'] + sent[1:] # label the sentence 'caption'
-            #print '\n46.', temp
+            #print('\n46.', temp)
             return temp                            
         #############################
         # REMAINING SHORTISH SINGLE-SENTENCE PARAS    
@@ -1412,19 +1412,19 @@ def find_and_label_heading(text,sent, proc_sent, sent1, counter_s, counter_p, pa
         # Note that this essay needs the number to be 8 or many headings are missed: B5843667_TMA01_H810_2012. Also H810_TMA01_9Oct12_B379967X needs 8.
         elif re.search(r':$', lastword) and len(untokend) > 10: # If the sentence has more than 10 chars and the last word contains a colon (I cannot put lastword == colon because of presence of other symbols like round brackets)
             temp = ['#dummy#'] + sent[1:] # label it as a true sentence
-            #print '\n47.', temp, counter_p
+            #print('\n47.', temp, counter_p)
             return temp                            
         elif len(sent) <= 12: # If the sentence has fewer than 12 words in it. Note that this essay needs the number to be 8 or many headings are missed: B5843667_TMA01_H810_2012_latin9.txt. Also H810_TMA01_9Oct12_B379967X needs 8.
             temp = ['#-s:H#'] + sent[1:] # label it as 'not a sentence' (replace dummy label) currently meaning probably a heading
-            #print '\n48.', temp, counter_p
+            #print('\n48.', temp, counter_p)
             return temp                            
         else: # If the para contains only one sentence and doesn't match any of the above rules, it's not a heading
             temp = sent
-            #print '\n49.', temp            
+            #print('\n49.', temp            )
             return temp                            
     else:
         temp = sent
-        #print '\n50.', temp        
+        #print('\n50.', temp        )
         return temp                        
 
 # Called by pre_process_struc in se_procedure.py
@@ -1441,12 +1441,12 @@ def find_and_label_section_sents(text50,headings,countTextChars,nf,nf2,dev):
 
     # Label the conclusion sentences using the indices you have just found.
     text50a = label_section_sents(text50, 'Conclusion', section_names, section_labels, c_first, c_last)
-    #print '\n\n\nFollowing search for concl: ', (c_first, c_last)
+    #print('\n\n\nFollowing search for concl: ', (c_first, c_last))
 
     # Find the indices of the first and last paragraphs of the summary section (if there is one).
     ((first, last),(title_first1,title_last1),headingQ), list_this_heading2 = find_section_paras(text50, 'Summary', headings, countTextChars, nf, nf2, dev)
     # Label the summary sentences using the indices you have just found.
-    #print '\n\n\nFollowing search for summary: ', (first, last),(title_first1,title_last1),headingQ
+    #print('\n\n\nFollowing search for summary: ', (first, last),(title_first1,title_last1),headingQ)
     text51 = label_section_sents(text50a, 'Summary', section_names, section_labels, first, last)
 
     # xxxx This is a crude way of saying that a heading cannot be counted as both a 'summary' heading and a 'conclusion' heading.
@@ -1456,19 +1456,19 @@ def find_and_label_section_sents(text50,headings,countTextChars,nf,nf2,dev):
 
     # Find the indices of the first and last paragraphs of the preface section (if there is one).    
     ((first, last),(title_first2,title_last2),headingQ), list_this_heading3 = find_section_paras(text50, 'Preface', headings, countTextChars, nf, nf2, dev)
-    #print '\n\n\nFollowing search for preface: ', (first, last),(title_first1,title_last1),headingQ
+    #print('\n\n\nFollowing search for preface: ', (first, last),(title_first1,title_last1),headingQ)
     # Label the preface sentences using the indices you have just found.
     text52 = label_section_sents(text51, 'Preface', section_names, section_labels, first, last)
 
     # Find the indices of the first and last paragraphs of the preface section (if there is one).    
     ((first, last),(title_first3,title_last3),headingQ), list_this_heading4 = find_section_paras(text50, 'Abstract', headings, countTextChars, nf, nf2, dev)
-    #print '\n\n\nFollowing search for preface: ', (first, last),(title_first1,title_last1),headingQ
+    #print('\n\n\nFollowing search for preface: ', (first, last),(title_first1,title_last1),headingQ)
     # Label the preface sentences using the indices you have just found.
     text53 = label_section_sents(text52, 'Abstract', section_names, section_labels, first, last)
        
     # Find the indices of the first and last paragraphs of the introduction section.
     ((i_first, i_last),(title_first4,title_last4),introheaded), list_this_heading5 = find_section_paras(text50,'Introduction', headings, countTextChars, nf, nf2, dev)        
-    #print '\n\n\nFollowing search for intro: ', (first, last),(title_first1,title_last1),headingQ
+    #print('\n\n\nFollowing search for intro: ', (first, last),(title_first1,title_last1),headingQ)
     # Label the introduction sentences using the indices you have just found.
     text54 = label_section_sents(text53, 'Introduction', section_names, section_labels, i_first, i_last)
 
@@ -1489,19 +1489,19 @@ def find_and_label_section_sents(text50,headings,countTextChars,nf,nf2,dev):
     # typically follow summaries and prefaces. So we need to look for
     # a title in each case and choose the first one that succeeds.
     if title_first5 != []:
-        print '\n########Title found backwards from Table of Contents heading\n'
+        print('\n########Title found backwards from Table of Contents heading\n')
         text77 = label_section_sents(text55, 'Title', section_names, section_labels, title_first5, title_last5)
     elif title_first1 != []:
-        print '\n########Title found backwards from Summary heading\n'
+        print('\n########Title found backwards from Summary heading\n')
         text77 = label_section_sents(text55, 'Title', section_names, section_labels, title_first1, title_last1)
     elif title_first2 != []:
-        print '\n########Title found backwards from Preface heading\n'
+        print('\n########Title found backwards from Preface heading\n')
         text77 = label_section_sents(text55, 'Title', section_names, section_labels, title_first2, title_last2)
     elif title_first3 != []:
-        print '\n########Title found backwards from Abstract heading\n'
+        print('\n########Title found backwards from Abstract heading\n')
         text77 = label_section_sents(text55, 'Title', section_names, section_labels, title_first3, title_last3)
     else:
-        print '\n########Title found backwards from Introduction section\n'
+        print('\n########Title found backwards from Introduction section\n')
         text77 = label_section_sents(text55, 'Title', section_names, section_labels, title_first4, title_last4)
     # Function 'count_words' counts the words in the body text only,
     # not the headings, captions, not the title.
