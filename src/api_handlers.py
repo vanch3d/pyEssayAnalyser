@@ -98,7 +98,8 @@ def setDispersionNgram(ngramlist,myarray_ke,lemmas):
 
         
         ranges = []
-        for k, g in groupby(enumerate(kk), lambda (i,x):i-x):
+        #for k, g in groupby(enumerate(kk), lambda (i,x):i-x):
+        for k, g in groupby(enumerate(kk), lambda i_x: i_x[0] - i_x[1]):
             group = map(itemgetter(1), g)
             if (len(group) == len(ngram['ngram'])):
                 ranges = ranges + group
