@@ -1,0 +1,100 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Swagger pyEssayAnalyser v3",
+        "description": "A Swagger/OAS (v3) description of the Essay Analyser API.",
+        "contact": {
+            "name": "vanch3d",
+            "url": "https://github.com/vanch3d"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://github.com/vanch3d/nvl-slim/blob/master/LICENSE"
+        },
+        "version": "0.1"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:5000/api",
+            "description": "pyEAv3 DEV server"
+        },
+        {
+            "url": "http://vanch3d.pythonanywhere.com/api",
+            "description": "pyEAv3 PRODUCTION server"
+        }
+    ],
+    "paths": {
+        "/analyse": {
+            "post": {
+                "tags": [
+                    "Essay"
+                ],
+                "summary": "Submit a text for analysis",
+                "description": "",
+                "operationId": "essay_post_analysis",
+                "requestBody":
+                    {
+                        "description": "the unique id of the publication to be retrieved",
+                        "required": true,
+                        "content":
+                        {
+                            "application/json": {
+                                "schema":
+                                {
+                                    "$ref": "#/components/schemas/RawEssay"
+                                }
+                            },
+                            "application/x-www-form-urlencoded": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "text": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": ["text"]
+                                }
+
+                            }
+                        }
+                    },
+
+                "responses": {
+                    "200": {
+                        "description": "no parameters in query; return the list of all supported formats"
+                    },
+                    "404": {
+                        "description": "bad request: the id is missing or not recognised"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "RawEssay": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "text": {
+                        "type": "string"
+                        }
+                    }
+            }
+
+        },
+        "parameters": {
+        }
+    },
+    "tags": [
+        {
+            "name": "Essay",
+            "description": "A summarization package",
+            "externalDocs": {
+                "description": "Read more",
+                "url": "https://goo.gl/gQTsEf"
+            }
+        }
+    ]
+}
