@@ -144,7 +144,7 @@ def find_last_section_para_index(section_name, heading_index_first, text):
                 counter_p -= 1
             else:
                 x = len(text)-1
-                #print('\n\n LAST PARA OF CONCL 22', text[x]                )
+                # print('\n\n LAST PARA OF CONCL 22', text[x]   # DEV             )
                 return len(text)-1 # If you don't find one, make the last para of the text the last para of the conclusion.                        
     else:
         result = heading_index_first
@@ -250,7 +250,7 @@ def find_no_intro_heading_indices(text, headings,countTextChars):
                             countIntroChars += len(temp)
                     if countIntroChars > countTextChars/3:
                         last = first                    
-                        print('###### INTRO SET TO A SINGLE PARA#####')
+                        # print('###### INTRO SET TO A SINGLE PARA#####')  # DEV
                         #print('first, last', first, last, text[first])
                     break
             else: # If this isn't a likely section para, move on to the next para                    
@@ -804,7 +804,8 @@ def table_entries_recheck2(text):
 
 
 def find_and_label_headings(text,ass_q_long_words,nf2,dev):
-    temp = [x for y in ass_q_long_words for x in y] # Unnest paragraph level of nesting in ass_q
+    # todo[vanch3d] check again
+    temp = [] #[x for y in ass_q_long_words for x in y] # Unnest paragraph level of nesting in ass_q
     ass_q_long_words = [item[1:] for item in temp] # Get rid of the structure label otherwise complete match may fail.
     #######################
     # FIRST DEAL WITH ENUMERATORS THAT CONSTITUE ENTIRE 'SENTENCES' AND THE SENTENCE THAT IMMEDIATELY FOLLOWS IT.
