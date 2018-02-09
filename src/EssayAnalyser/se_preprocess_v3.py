@@ -635,7 +635,7 @@ def get_lemmas(sent):
         except:
             temp = lmtzr.lemmatize(
                 t[0])  # put in an exception in case it finds a POS tag that you haven't accounted for
-        mylist.append((t[0], unicode(
+        mylist.append((t[0], str(
             temp)))  # A few of the lemmas in Wordnet lemmatizer are not in unicode, so I am forcing it here.
     mylist.insert(0, sent[0])  # Put the label back at the beginning of the sentence
     return mylist
