@@ -1,16 +1,5 @@
-'''
-@todo OrderedDict does not exist in Python 2.6, running on Linux.
-An alternative needs to be installed manually: https://pypi.python.org/pypi/ordereddict
-Or switch back to standard Dict.
-'''
-## @todo: Added for backward compatibility with Python 2.6 (linux)
-import sys
-
-if sys.version_info < (2, 7):
-    from ordereddict import OrderedDict
-else:
-    from collections import OrderedDict
 from networkx.readwrite import json_graph
+from collections import OrderedDict
 
 '''
 This is to keep track of changes made in the data output of the analyser.
@@ -26,8 +15,9 @@ increases the patch version (e.g. changing from 3.1.5 to 3.1.6)
 3.0.0    Initial version of the data structure
 3.1.0    Added mashup of parasenttok (se_parasenttok) to contains all info (id, text, toprank, tag, raking)
 3.2.0    Added graphs for sentences and keywords (se_sample_graph, ke_sample_graph)
+3.3.0    Switched to python3.6, with bug fixes and some optimisation
 '''
-ANALYTICS_VERSION = "3.2.0"
+ANALYTICS_VERSION = "3.3.0"
 
 
 def make_results_array(parasenttok, myarray_ke, gr_ke_sample,
@@ -122,7 +112,8 @@ def make_results_array(parasenttok, myarray_ke, gr_ke_sample,
     ##se_sample_graph = OrderedDict()
     ##se_sample_graph['gr_se_sample'] = gr_se_sample
     ##essay['se_sample_graph'] = se_sample_graph
-    essay['se_sample_graph'] = json_graph.dumps(gr_se_sample)
+    # essay['se_sample_graph'] = json_graph.dumps(gr_se_sample)
+    essay['se_sample_graph'] = json_graph.node_link_data(gr_se_sample)
 
     body = OrderedDict()
     body['late_wc'] = late_wc  # new
@@ -176,7 +167,8 @@ def make_results_array(parasenttok, myarray_ke, gr_ke_sample,
     ##ke_sample_graph = OrderedDict()
     ##ke_sample_graph['gr_ke_sample'] = gr_ke_sample
     ##essay['ke_sample_graph'] = ke_sample_graph
-    essay['ke_sample_graph'] = json_graph.dumps(gr_ke_sample)
+    #essay['ke_sample_graph'] = json_graph.dumps(gr_ke_sample)
+    essay['ke_sample_graph'] = json_graph.node_link_data(gr_ke_sample)
 
     ke_stats = OrderedDict()
     ke_stats['avfreqsum'] = avfreqsum
