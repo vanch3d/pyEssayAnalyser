@@ -97,12 +97,13 @@ def pre_process_text(text0, ass_q_long_words, nf, nf2, dev):
     # FIND AND LABEL SECTION SENTENCES
     text77, section_names, section_labels, headings, conclheaded, c_first, c_last, introheaded, i_first, i_last = \
         find_and_label_section_sents(text50, headings, countTextChars, nf, nf2, dev)
-    print('\nREMAINING UNLABELLED SENTENCES:')
-    for para in text77:
-        for sent in para:
-            if sent[0] == '#dummy#':
-                print(sent)
-    print('\n')
+    if dev == 'DGF':
+        print('\nREMAINING UNLABELLED SENTENCES:')
+        for para in text77:
+            for sent in para:
+                if sent[0] == '#dummy#':
+                    print(sent)
+        print('\n')
 
     # _______________________________________
     #########################
@@ -203,7 +204,8 @@ def process_essay_se(text, parasenttok, section_labels, nf, nf2, dev):
     try:
         scores_array = dict.fromkeys(gr_se.nodes(), 1.0 / len(gr_se.nodes()))
     except ZeroDivisionError:
-        print('\nZero division error: no nodes in graph\n')
+        if dev == 'DGF':
+            print('\nZero division error: no nodes in graph\n')
         scores_array = dict.fromkeys(gr_se.nodes(), 1.0 / 1)
         # return 'nil','nil','nil'
     # scores_array = dict.fromkeys(gr_se.nodes(),1.0/len(gr_se.nodes()))
