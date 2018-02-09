@@ -8,6 +8,7 @@ from werkzeug.exceptions import HTTPException, BadRequestKeyError
 
 from EssayAnalyser.errors import EssayError
 from EssayAnalyser.essay import Essay
+from api_handlers import restructure_ngrams
 
 '''
 Setup the Flask environment
@@ -70,12 +71,12 @@ def get_openapi():
 @app.route('/api/analyse', methods=['POST'])
 def essay_post_analysis():
     try:
-        text = request.form['tcext']
+        text = request.form['text']
         essay = Essay(text).process()
+        data = restructure_ngrams(essay.data)
         json = {
-            'data': essay.data,
+            'data': data,
             'metadata': essay.meta
-
         }
         return jsonify(json), 200
 
