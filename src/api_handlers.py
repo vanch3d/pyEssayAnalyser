@@ -98,7 +98,8 @@ def setDispersionNgram(ngramlist,myarray_ke,lemmas):
 
         
         ranges = []
-        for k, g in groupby(enumerate(kk), lambda (i,x):i-x):
+        #for k, g in groupby(enumerate(kk), lambda (i,x):i-x):
+        for k, g in groupby(enumerate(kk), lambda i_x: i_x[0] - i_x[1]):
             group = map(itemgetter(1), g)
             if (len(group) == len(ngram['ngram'])):
                 ranges = ranges + group
@@ -107,47 +108,51 @@ def setDispersionNgram(ngramlist,myarray_ke,lemmas):
         h,b = np.histogram(ranges,bins=10, range=(0, len(lemmas)))
         ngram['trend'] = h.tolist()
 
-def Flask_process_text(text0,module="H810",task="TMA01"):
-    essay = top_level_procedure(text0, None, None, None, "NVL",module,task)
-    
+
+def restructure_ngrams(struct):
     # reformat n-grams into unified structure
-    keylemmas = essay['ke_data']['keylemmas']
-    bigram_keyphrases = essay['ke_data']['bigram_keyphrases']
-    trigram_keyphrases = essay['ke_data']['trigram_keyphrases']
-    quadgram_keyphrases = essay['ke_data']['quadgram_keyphrases']
-    myarray_ke = essay['ke_data']['myarray_ke']
-    
-    scoresNfreqs = essay['ke_data']['scoresNfreqs']
-    
-    # Build an associative array out of the keywords list    
-    for (word,score,r,c) in scoresNfreqs:
+    keylemmas = struct['ke_data']['keylemmas']
+    bigram_keyphrases = struct['ke_data']['bigram_keyphrases']
+    trigram_keyphrases = struct['ke_data']['trigram_keyphrases']
+    quadgram_keyphrases = struct['ke_data']['quadgram_keyphrases']
+    myarray_ke = struct['ke_data']['myarray_ke']
+
+    scoresNfreqs = struct['ke_data']['scoresNfreqs']
+
+    # Build an associative array out of the keywords list
+    for (word, score, r, c) in scoresNfreqs:
         __mapkeyscore[word] = score
-    
-    nvl_data = {}
-    nvl_data['keywords'] = lemmaToJSON(keylemmas,myarray_ke)
-    nvl_data['bigrams'] = ngramToJSON(bigram_keyphrases,myarray_ke)
-    nvl_data['trigrams'] = ngramToJSON(trigram_keyphrases,myarray_ke)
-    nvl_data['quadgrams'] = ngramToJSON(quadgram_keyphrases,myarray_ke)
-    essay['nvl_data'] = nvl_data
-    
+
+    ngrams = {}
+    ngrams['keywords'] = lemmaToJSON(keylemmas, myarray_ke)
+    ngrams['bigrams'] = ngramToJSON(bigram_keyphrases, myarray_ke)
+    ngrams['trigrams'] = ngramToJSON(trigram_keyphrases, myarray_ke)
+    ngrams['quadgrams'] = ngramToJSON(quadgram_keyphrases, myarray_ke)
+    struct['ngrams'] = ngrams
+
     # Get complete flat list of text's lemmas
-    lemmas = [l for p in essay['se_data']['se_parasenttok'] for s in p for l in s['lemma']]
-    
+    lemmas = [l for p in struct['se_data']['se_parasenttok'] for s in p for l in s['lemma']]
+
     # build dispersion arrays for lemma
-    for ngram in nvl_data['keywords']:
+    for ngram in ngrams['keywords']:
         hh = ngram['ngram'][0]
-        kk=[idx for idx,w in enumerate(lemmas) if w==hh]
+        kk = [idx for idx, w in enumerate(lemmas) if w == hh]
         ngram['dispersion'] = kk
-        h,b = np.histogram(kk,bins=10, range=(0, len(lemmas)))
+        h, b = np.histogram(kk, bins=10, range=(0, len(lemmas)))
         ngram['trend'] = h.tolist()
 
     # build dispersion arrays for ngrams
     # TODO: dispersion does not work for key phrases; removed from data structure
-    #setDispersionNgram(nvl_data['bigrams'],myarray_ke,lemmas)
-    #setDispersionNgram(nvl_data['trigrams'],myarray_ke,lemmas)
-    #setDispersionNgram(nvl_data['quadgrams'],myarray_ke,lemmas)
-        
+    # setDispersionNgram(ngrams['bigrams'],myarray_ke,lemmas)
+    # setDispersionNgram(ngrams['trigrams'],myarray_ke,lemmas)
+    # setDispersionNgram(ngrams['quadgrams'],myarray_ke,lemmas)
+    return struct
 
+
+def Flask_process_text(text0,module="H810",task="TMA01"):
+    essay = top_level_procedure(text0, None, None, None, "NVL",module,task)
+
+    restructure_ngrams(essay)
     return essay
 
 

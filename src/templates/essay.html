@@ -5,23 +5,15 @@
 
 	</head>
 	<body>
-		{% if request.form['username'] %}
-		<h1>Hello {{ request.form['username'] }}!</h1>
-		{% else %}
-		<h1>Hello World!</h1>
-		{% endif %}
 
-		<p>
-			You've just submitted a new essay
-		</p>
-		<div class="essay">
-			{{ request.form['text'] }}
-		</div>
-
-		<p>
-			{{essay}}
-		</p>
-
-		<a href="{{ url_for('hello_world') }}">Redirect example</a>
+	  <form action="{{ url_for('essay_post_analysis') }}" method=post>
+    <dl>
+      <dt>Username:
+		<dd> <textarea name="text" rows="10" cols="30"></textarea>
+      <dt>metadada:
+      <dd><input type=text name=username>
+      <dd><input type=submit value=Analyse>
+    </dl>
+  </form>
 	</body>
 </html>
