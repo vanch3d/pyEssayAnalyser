@@ -66,7 +66,7 @@ def unique_everseen(iterable, key=None):
     seen = set()
     seen_add = seen.add
     if key is None:
-        for element in itertools.ifilterfalse(seen.__contains__, iterable):
+        for element in itertools.filterfalse(seen.__contains__, iterable):
             seen_add(element)
             yield element
     else:
@@ -83,7 +83,7 @@ def unique_everseen(iterable, key=None):
 # Used to put lists of inflections into an array with their lemma as the key.
 # Called by 'process_essay_ke' (in this file).
 def add_item_to_array_ke(myarray_ke, num, item):
-    if myarray_ke.has_key(num):  # If num is one of the keys already in the array...
+    if num in myarray_ke:  # If num is one of the keys already in the array...
         myarray_ke[num].append(item)  # append 'item' (add 'item' as a detail to an already existing entry).
     else:
         myarray_ke[num] = item  # Otherwise add this item as new entry in the array.
@@ -367,7 +367,6 @@ def process_essay_ke(text, wordtok_text, nf, nf2, dev):
     # print myarray_ke
     keywords = []
     for item in keylemmas:
-        # print item
         wordlist = myarray_ke[item]  # by looking up in myarray_ke the values of the key lemmas
         monitorlist = []
         for w in wordlist:
