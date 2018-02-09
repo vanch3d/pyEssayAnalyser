@@ -30,7 +30,7 @@ def sample_nodes_for_figure(graph,nodes,cat):
 # or as a detail of an existing item. 
 # Called by 'fill_sentence_array' and 'make_edge_weights_arrays' and 'update_array'.
 def add_item_to_array(myarray, num, item):
-    if myarray.has_key(num):  # If num is one of the keys already in the array...
+    if num in myarray:  # If num is one of the keys already in the array...
         myarray[num].append(item)  # append 'item' (add 'item' as a detail to an already existing entry).
     else:
         myarray[num] = [item]  # Otherwise add this item as new entry in the array.
@@ -345,10 +345,10 @@ def find_all_gw_scores(gr, scores_array, nf2, dev, d=.85, max_iterations=100, mi
     nodes = gr.nodes()  # Make a list of the graph's nodes
     graph_size = len(nodes)  # Find the size of the graph, meaning the number of the graph's nodes.
     try:
-        min_value = (
-                                1.0 - d) / graph_size  # Set a minimum WSVi score value for nodes without inbound links, i.e., = .15/graph_size. This idea is taken directly from pagerank.py.
+        min_value = (1.0 - d) / graph_size  # Set a minimum WSVi score value for nodes without inbound links, i.e., = .15/graph_size. This idea is taken directly from pagerank.py.
     except ZeroDivisionError:
-        print('\nZero division error: no nodes in graph\n')
+        if dev == 'DGF':
+            print('\nZero division error: no nodes in graph\n')
         min_value = (1.0 - d) / 1
     # for i in range(3):  # Set low for testing purposes.
     for i in range(max_iterations):  # Only go round this loop max_iterations (100) times for each node.
@@ -401,13 +401,13 @@ def update_array(myarray, scores_array):
 # {0: [[(u'introduction', u'introduction')], ('#-s:h#', '0'), u'Introduction', 0.0025862068965517245], 
 def reorganise_array(myarray):
     # print('\n\n\nreorganise_array')
-    # print(myarray)
     mylist = []
     counter = 0
     while 1:
         if counter <= len(
                 myarray) - 1:  # 0: [[(u'introduction', u'introduction')], '#-s:h#', u'Introduction', 0.0025862068965517245]
-            temp = myarray.items()  # Retrieve the contents of the array in a different format.
+            temp = list(myarray.items())  # Retrieve the contents of the array in a different format.
+            # print(temp)
             # rank               # array key       # category           # original sentence  # processed sentence
             # temp1 = (round(temp[counter][1][3],7), temp[counter][0], temp[counter][1][1], temp[counter][1][2], temp[counter][1][0] ) # xxxx do not delete. Put rank first, then key, then category label, then original sentence (before word tokenisation ff.), then processed sentence.
             temp1 = (temp[counter][1][3], temp[counter][0], temp[counter][1][1], temp[counter][1][2], temp[counter][1][
@@ -480,8 +480,8 @@ def sample_nodes_for_figure(graph, nodes, cat):
     # all_edges = graph.edges(data = True) # Get a list of all the graph's edges (expressed like '(21, 47, {'weight': 0.2891574659831202})')
     mylist = []
     for item in nodes:
-        successors = len(graph.successors(
-            item))  # xxxx Do not delete. Get the length of the list of successors for each node. Directed graph version.
+        successors = sum(1 for _ in graph.successors(item))
+        # successors = len(graph.successors(item))  # xxxx Do not delete. Get the length of the list of successors for each node. Directed graph version.
         # successors = len(graph.neighbors(item)) # xxxx Get the length of the list of neighbours for each node. Undirected version.
         # print('Number of neighbours for node: ', item, ' : ', successors)
         if successors > 2:  # >= 0:  # > 2 # Currently I am including nodes that don't have any successors, so they would appear in the graph as unconnected nodes.
