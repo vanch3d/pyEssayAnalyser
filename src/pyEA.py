@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug.exceptions import HTTPException, BadRequestKeyError
+from argon2 import PasswordHasher
 
 from EssayAnalyser.errors import EssayError
 from EssayAnalyser.essay import Essay
@@ -17,6 +18,13 @@ Setup the Flask environment
 # create a flask application
 template_dir = os.path.abspath('./templates')
 app = Flask(__name__,template_folder=template_dir)
+
+# set a hashed private token for security (secret passed with API request, see below)
+# to generate one:
+# >>> from argon2 import PasswordHasher
+# >>> ph = PasswordHasher()
+# >>> hash = ph.hash("token sent with request")
+app.ARGON2_TOKEN = '$argon2i$v=19$m=512,t=2,p=2$Zxk+Zi2QSU2KjRmsv8auSg$6Uc8aAjuVCC91f1c9WgM8Q'
 
 # Create the debug toolbar
 app.debug = True
@@ -36,7 +44,7 @@ toolbar = DebugToolbarExtension(app)
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
     # @todo
-    # app.logger.info("sdfdgdfgdfgdfgdfgdfgdf")
+    # app.logger.info("test")
     return response
 
 
@@ -44,14 +52,8 @@ def after_request(response):
 Define the routes
 '''
 
-# Main page (?)
-@app.route('/')
-def hello_world():
-    return "Hello World!"
-
-
 # Various testing pages
-@app.route('/test/submit')
+@app.route('/submit')
 def show_submit ():
     return render_template('essay.html')
 
@@ -61,9 +63,9 @@ The Essay Analyser API
 '''
 
 # Swagger specification
-@app.route('/api/openapi.json')
+@app.route('/openapi.yml')
 def get_openapi():
-    with open(os.path.abspath("./specs/openapi.json"), "r") as f:
+    with open(os.path.abspath("./specs/openapi.yml"), "r") as f:
         return f.read()
 
 
@@ -72,11 +74,14 @@ def get_openapi():
 def essay_post_analysis():
     try:
         text = request.form['text']
+
+        if app.ARGON2_TOKEN is not None:
+            # @todo[vanch3d] check for token and argon2 validity
+            pass
         essay = Essay(text).process()
-        data = restructure_ngrams(essay.data)
         json = {
-            'data': data,
-            'metadata': essay.meta
+            'data': essay.data,
+            'metadata': essay.metadata
         }
         return jsonify(json), 200
 
@@ -97,8 +102,8 @@ def essay_post_analysis():
 '''
 Swagger UI
 '''
-SWAGGER_URL = '/api'  # URL for exposing Swagger UI (without trailing '/')
-API_URL = '/api/openapi.json'  # Our API url (can of course be a local resource)
+SWAGGER_URL = ''  # URL for exposing Swagger UI (without trailing '/')
+API_URL = '/openapi.yml'  # Our API url (can of course be a local resource)
 
 # Call factory function to create our blueprint
 swaggerui_blueprint = get_swaggerui_blueprint(
@@ -106,7 +111,7 @@ swaggerui_blueprint = get_swaggerui_blueprint(
     API_URL,
     config={
         # Swagger UI config overrides
-        'app_name': "Test application"
+        'app_name': "Swagger | pyEA v3"
     }
 )
 # Register blueprint at URL (URL must match the one given to factory function above)
