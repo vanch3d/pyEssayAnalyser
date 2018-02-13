@@ -5,6 +5,7 @@ from EssayAnalyser.ke_all_v3 import process_essay_ke, get_essay_stats_ke
 from EssayAnalyser.se_graph_v3 import sample_nodes_for_figure
 from EssayAnalyser.se_print_v3 import get_essay_stats_se
 from EssayAnalyser.se_procedure_v3 import pre_process_text, process_essay_se
+from api_handlers import restructure_ngrams
 
 Data = namedtuple("Data", [
     "text_se",
@@ -60,7 +61,7 @@ class Essay:
 
         self.text = txt
         self.data = {}
-        self.meta = {}
+        self.metadata = {}
 
     def process(self):
         """
@@ -81,10 +82,22 @@ class Essay:
         sample = self.__get_essay_graphs(se,sstats,ke)
 
         print("############# PACKAGE DATA & METADATA")
-        self.data = self.__make_results_array(data,ke,se,sstats,kstats,sample)
+        __array = self.__make_results_array(data,ke,se,sstats,kstats,sample)
+        __array = restructure_ngrams(__array)
+
+        self.__extract_summary(__array)
+
 
         print("############# FiNISH")
         return self
+
+    def __extract_summary(self, data):
+        self.data['se_parasenttok'] = data['se_data']['se_parasenttok']
+        self.data['ngrams'] = data['ngrams']
+
+        self.metadata['version'] = data['version']
+        self.metadata['se_stats'] = data['se_stats']
+
 
     def __pre_process_text(self):
         print("############# PRE-PROCESSING")
