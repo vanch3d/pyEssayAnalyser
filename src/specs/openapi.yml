@@ -1,0 +1,71 @@
+openapi: 3.0.1
+info:
+  title: Swagger pyEssayAnalyser v3
+  description: |
+    A Swagger/OAS (v3) description of the Essay Analyser API.
+    ------------------
+
+    @todo
+
+  contact:
+    name: vanch3d
+    url: 'https://github.com/vanch3d'
+  license:
+    name: MIT
+    url: 'https://github.com/vanch3d/nvl-slim/blob/master/LICENSE'
+  version: 3.3.0
+servers:
+  - url: 'http://localhost:5000/api'
+    description: pyEAv3 DEV server
+  - url: 'http://vanch3d.pythonanywhere.com/api'
+    description: pyEAv3 PRODUCTION server
+paths:
+  /analyse:
+    post:
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Essay
+      summary: Submit a text for analysis
+      description: ''
+      operationId: essay_post_analysis
+      requestBody:
+        description: the unique id of the publication to be retrieved
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RawEssay'
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+              required:
+                - text
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: no parameters in query; return the list of all supported formats
+        '404':
+          description: 'bad request: the id is missing or not recognised'
+components:
+  securitySchemes:
+    ApiKeyAuth:               # arbitrary name for the security scheme
+      type: apiKey
+      in: header              # can be "header", "query" or "cookie"
+      name: PYEA-API-KEY      # name of the header, query parameter or cookie
+  schemas:
+    RawEssay:
+      required:
+        - name
+      properties:
+        text:
+          type: string
+  parameters:
+tags:
+  - name: Essay
+    description: The Essay Analyser itself
