@@ -1,19 +1,43 @@
-<!doctype html>
-<html>
-	<head>
-		<title>Hello from EssayAnalyser</title>
+{% extends "base.jinja2" %}
 
-	</head>
-	<body>
 
-	  <form action="{{ url_for('essay_post_analysis') }}" method=post>
-    <dl>
-      <dt>Username:
-		<dd> <textarea name="text" rows="10" cols="30"></textarea>
-      <dt>metadada:
-      <dd><input type=text name=username>
-      <dd><input type=submit value=Analyse>
-    </dl>
-  </form>
-	</body>
-</html>
+{% block title %}Analyse{% endblock %}
+
+{% block content %}
+    <div class="py-5 text-center">
+        <h2>Extractive Summarisation of Text</h2>
+        <p class="lead">Below are ....</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 order-md-2 mb-4"></div>
+        <div class="col-md-8 order-md-1">
+            <h4 class="mb-3">Analyse/submit by HTML form</h4>
+            <form action="{{ url_for('essay_post_analysis') }}" method=post class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="text">Full Text</label>
+                    <textarea name="text" id="text" class="form-control"  rows="10" cols="30" placeholder="... type or paste text ..." required></textarea>
+                    <div class="invalid-feedback" style="width: 100%;">
+                        The text is required.
+                    </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-5 mb-3">
+                      <label for="format">Format</label>
+                      <select class="custom-select d-block w-100" id="format" name="format" required>
+                        <option value="">Choose...</option>
+                        <option value="text/plain">Raw Text (txt)</option>
+                        <option value="text/markdown">Markdown (md)</option>
+                        </select>
+                      <div class="invalid-feedback">
+                        Please select a valid format.
+                        </div>
+                  </div>
+                </div>
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Send for Analysis</button>
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
