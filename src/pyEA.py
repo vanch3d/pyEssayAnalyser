@@ -73,7 +73,23 @@ def get_openapi():
 @app.route('/api/analyse', methods=['POST'])
 def essay_post_analysis():
     try:
-        text = request.form['text']
+        text = None
+        ctype = request.headers.get('Content-Type')
+        if ctype == "text/plain":
+            text = request.data.decode("utf-8")
+            pass
+        elif ctype == "application/json":
+            text = request.data.decode("utf-8")
+            pass
+        elif ctype == "application/x-www-form-urlencoded":
+            text = request.form['text']
+            pass
+        else:
+            raise Exception("The format is not recognised by pyEA v3")
+            pass
+
+        assert text is not None, "text is null, it cannot be processed by pyEA v3"
+
 
         if app.ARGON2_TOKEN is not None:
             # @todo[vanch3d] check for token and argon2 validity
@@ -94,7 +110,7 @@ def essay_post_analysis():
     #    return error.json(), e.code
     except Exception as e:
         # Any unsupported exceptions coming from code
-        error = EssayError(500, repr(e))
+        error = EssayError(500, e.__class__.__name__)
         error.explanation = e.args
         return error.json(), 500
 
