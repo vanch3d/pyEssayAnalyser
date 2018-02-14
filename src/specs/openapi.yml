@@ -27,31 +27,39 @@ paths:
       tags:
         - Essay
       summary: Submit a text for analysis
-      description: ''
+      description: |
+        to do
       operationId: essay_post_analysis
       requestBody:
-        description: the unique id of the publication to be retrieved
+        description: the text to be analysed
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RawEssay'
+              $ref: '#/components/schemas/Essay'
           application/x-www-form-urlencoded:
             schema:
-              type: object
-              properties:
-                text:
-                  type: string
-              required:
-                - text
+              $ref: '#/components/schemas/Essay'
           text/plain:
+            schema:
+              type: string
+          text/markdown:
             schema:
               type: string
       responses:
         '200':
-          description: no parameters in query; return the list of all supported formats
+          description: |
+            text analysed; return a data package representing the extractive summarisation of the text
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Summary'
         '404':
-          description: 'bad request: the id is missing or not recognised'
+          description: |
+            to do
+        '500':
+          description: |
+            to do
 components:
   securitySchemes:
     ApiKeyAuth:               # arbitrary name for the security scheme
@@ -59,13 +67,99 @@ components:
       in: header              # can be "header", "query" or "cookie"
       name: PYEA-API-KEY      # name of the header, query parameter or cookie
   schemas:
-    RawEssay:
+    Essay:
       required:
-        - name
+        - text
       properties:
         text:
           type: string
-  parameters:
+    NGrams:
+      description: a n-gram
+      properties:
+        count:
+          type: integer
+        lemma:
+          type: array
+          items:
+            type: string
+        source:
+          type: array
+          items:
+            type: string
+        score:
+          type: array
+          items:
+            type: string
+        dispersion:
+          type: array
+          items:
+            type: integer
+        trend:
+          type: array
+          items:
+            type: integer
+    Sentence:
+      description: An object representing a summarised sentence of the text
+      properties:
+        id:
+          type: integer
+        lemma:
+          type: array
+          items:
+            type: string
+        rank:
+          description: the 'keyness' ranking of the sentence in the text
+          type: integer
+        tag:
+          type: string
+          enum:
+            - "#+s:i#"
+            - "#dummy#"
+        text:
+          type: string
+    Summary:
+      properties:
+        data:
+          type: object
+          properties:
+            ngrams:
+              type: object
+              properties:
+                keywords:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/NGrams'
+                bigrams:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/NGrams'
+                trigrams:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/NGrams'
+                quadgrams:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/NGrams'
+            parasenttok:
+              description: |
+                the text restructured as an array of paragraphs,
+                each of them an array of sentences,
+                each of them summarising the original sentence in the text
+              type: array
+              items:
+                description: a paragraph, as an array of sentence
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sentence'
+        metadata:
+          type: object
+          properties:
+            version:
+              type: string
+            se_stats:
+              type: object
+  parameters: {}
 tags:
   - name: Essay
     description: The Essay Analyser itself
