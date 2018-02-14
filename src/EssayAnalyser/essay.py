@@ -59,9 +59,17 @@ class Essay:
         :param txt: The text (plain text, utf-8) to be processed
         """
 
+        self.options = {
+            'parse_headers': True
+        }
         self.text = txt
         self.data = {}
         self.metadata = {}
+
+    def setoptions(self,config):
+        if config is not None and type(config) is dict:
+            self.options = {**self.options, **config}
+        return self
 
     def process(self):
         """
