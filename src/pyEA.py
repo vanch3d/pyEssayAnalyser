@@ -1,15 +1,13 @@
 import logging
 import os
 from logging.handlers import RotatingFileHandler
+
 from flask import Flask, request, jsonify, render_template
-from flask_swagger_ui import get_swaggerui_blueprint
 from flask_debugtoolbar import DebugToolbarExtension
-from werkzeug.exceptions import HTTPException, BadRequestKeyError
-from argon2 import PasswordHasher
+from flask_swagger_ui import get_swaggerui_blueprint
 
 from EssayAnalyser.errors import EssayError
 from EssayAnalyser.essay import Essay
-from api_handlers import restructure_ngrams
 
 '''
 Setup the Flask environment
@@ -17,7 +15,7 @@ Setup the Flask environment
 
 # create a flask application
 template_dir = os.path.abspath('./templates')
-app = Flask(__name__,template_folder=template_dir)
+app = Flask(__name__, template_folder=template_dir)
 
 # set a hashed private token for security (secret passed with API request, see below)
 # to generate one:
@@ -39,6 +37,7 @@ app.config['DEBUG_TB_PANELS'] = (
 )
 toolbar = DebugToolbarExtension(app)
 
+
 # define middleware
 @app.after_request
 def after_request(response):
@@ -52,15 +51,17 @@ def after_request(response):
 Define the routes
 '''
 
+
 # Various testing pages
 @app.route('/submit')
-def show_submit ():
+def show_submit():
     return render_template('essay.html')
 
 
 '''
 The Essay Analyser API
 '''
+
 
 # Swagger specification
 @app.route('/openapi.yml')
