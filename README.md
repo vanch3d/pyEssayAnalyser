@@ -3,6 +3,14 @@ pyEssayAnalyser {#pyEssayAnalyser}
 
 An essay Analyser &amp; Summariser, using Flask for the API and NLTK for the language processing.
 
+## Credits
+    Copyright (c) 2012-2014 Debora Georgia Field <deboraf7 [at] aol.com>
+    Copyright (c) 2012-2018 Nicolas Van Labeke <nicolas.github [at] calques3d.org>
+
+For the original version of the analyser, see [SAFeSEA/pyEssayAnalyser](https://github.com/SAFeSEA/pyEssayAnalyser) 
+For the current version, see see [vanch3d/pyEssayAnalyser](https://github.com/vanch3d/pyEssayAnalyser)
+    
+
 ## Installation
 
 1. Clone the project locally on your computer.
