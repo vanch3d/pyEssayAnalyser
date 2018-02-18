@@ -2,7 +2,8 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask, request, jsonify, render_template
+import flask
+from flask import Flask, request, jsonify, render_template, make_response
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_swagger_ui import get_swaggerui_blueprint
 
@@ -67,8 +68,30 @@ The Essay Analyser API
 @app.route('/openapi.yml')
 def get_openapi():
     with open(os.path.abspath("./specs/openapi.yml"), "r") as f:
-        return f.read()
+        response = make_response(f.read())
+        response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+        return response
 
+
+# Swagger specification
+@app.route('/schema/<file>.<ext>')
+def get_schema_files(file, ext):
+    formats = {
+        "json": "application/json",
+        "xml" : "text/xml",
+        "yml" : "text/vnd.yaml",
+        "yaml": "text/vnd.yaml"
+    }
+    if ext not in formats:
+        flask.abort(403)
+    try:
+        path = f"./specs/schema/{file}.{ext}"
+        with open(os.path.abspath(path), "r") as f:
+            response = make_response(f.read())
+            response.headers['Content-Type'] = f'{formats.get(ext)}; charset=utf-8'
+            return response
+    except FileNotFoundError:
+        flask.abort(404)
 
 # Text Analyser
 @app.route('/api/analyse', methods=['POST'])
