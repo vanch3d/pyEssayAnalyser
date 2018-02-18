@@ -3,16 +3,30 @@ info:
   title: Swagger pyEssayAnalyser v3
   description: |
     A Swagger/OAS (v3) description of the Essay Analyser API.
-    ------------------
+    ----
 
-    @todo
+    The Essay Analyser (pyEA) was developped as part of the SafeSEA project (Open University, Oxford University) which aimed at supporting students in writing essays, using automatic summarisation techniques to promote reflection.
+
+    The approach to producing essay summaries uses two simple extractive summarisation techniques: key phrase extraction and key sentence extraction.
+
+    Key phrases words and short phrases that are the most suggestive of the content of a discourse. Similarly, key sentences are the sentences that are most suggestive of a text's content.
+
+    The pyEA API provides a simple access to the analyser and key words/sentences extraction.
+
+    For more information:
+    - [About the project](http://nvl.calques3d.org/projects/safesea)
+    - [pyEA on GitHub](https://github.com/vanch3d/pyEssayAnalyser)
+
+    Copyright (c) 2013-2018 Debora Georgia Field <deboraf7 [at] aol.com>
+
+    Copyright (c) 2013-2018 Nicolas Van Labeke <nicolas.github [at] calques3d.org>
 
   contact:
     name: vanch3d
     url: 'https://github.com/vanch3d'
   license:
     name: MIT
-    url: 'https://github.com/vanch3d/nvl-slim/blob/master/LICENSE'
+    url: 'https://github.com/vanch3d/pyEssayAnalyser/blob/master/LICENSE'
   version: 3.3.0
 servers:
   - url: 'http://localhost:5000/api'
@@ -25,10 +39,23 @@ paths:
       security:
         - ApiKeyAuth: []
       tags:
-        - Essay
+        - Extractive Summarisation
       summary: Submit a text for analysis
       description: |
-        to do
+        The main access point to the analyser.
+        Receive a text for analysis and return a complete data package representing the summmary of the text:
+        - list of key words
+        - list of key sentences
+        - identification of text structure (headings, title, introduction, ...)
+
+        The operation accepts 4 types of input:
+        - plain text (line breaks to indicate paragraphs)
+        - Markdown (double line breaks to indicate paragraphs)
+        - json (sentences as string items, grouped in array for paragraphs, grouped in array for the whole text)
+        - HTML form, with the main field 'text' containing plain text
+
+        Note that the analysis is time-consuming and can take up to 20-30 seconds for a 4000-words essay.
+
       operationId: essay_post_analysis
       requestBody:
         description: the text to be analysed
@@ -36,7 +63,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Essay'
+              type: array
+              description: paragraph
+              items:
+                type: array
+                items:
+                  description: sentence
+                  type: string
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Essay'
@@ -161,5 +194,5 @@ components:
               type: object
   parameters: {}
 tags:
-  - name: Essay
-    description: The Essay Analyser itself
+  - name: Extractive Summarisation
+    description: All routes to the analyser and summariser itself
